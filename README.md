@@ -2,7 +2,7 @@
 
 智能工抵台账管理系统
 
-[![Version](https://img.shields.io/badge/version-0.1.1-blue.svg)](#)
+[![Version](https://img.shields.io/badge/version-0.1.2-blue.svg)](#)
 
 A full-stack intelligent ledger management system for project mortgage data, featuring Excel import with automatic difference detection, AI-powered chat assistant, and financial data tracking.
 
