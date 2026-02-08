@@ -1,0 +1,31 @@
+.uploadRoot {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+}
+
+.dragger {
+  border-radius: 14px !important;
+  border: 1px dashed #d9d1c7 !important;
+  background: linear-gradient(180deg, #fffaf3 0%, #ffffff 100%) !important;
+  width: 100%;
+  min-width: 0;
+}
+
+.statsGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.tabsBlock {
+  width: 100%;
+  min-width: 0;
+}
+
+.tableWrap {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}

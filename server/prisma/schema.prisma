@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model companies {
+  id         BigInt   @id @default(autoincrement())
+  name       String   @unique(map: "uq_company_name")
+  alias      Json     @default("{}")
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  units      units[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model files {
+  id         BigInt   @id @default(autoincrement())
+  unit_id    BigInt
+  file_type  String
+  file_name  String
+  file_uri   String
+  ocr_text   String?
+  ocr_meta   Json     @default("{}")
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  units      units    @relation(fields: [unit_id], references: [id], onUpdate: NoAction, map: "fk_file_unit")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model import_logs {
+  id            BigInt    @id @default(autoincrement())
+  import_type   String
+  file_name     String
+  operator_id   BigInt
+  status        String
+  stats         Json      @default("{}")
+  diff_snapshot Json      @default("{}")
+  created_at    DateTime  @default(now()) @db.Timestamp(6)
+  finished_at   DateTime? @db.Timestamp(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model transactions {
+  id          BigInt   @id @default(autoincrement())
+  unit_id     BigInt
+  txn_type    String
+  amount      Decimal  @db.Decimal(14, 2)
+  currency    String   @default("CNY")
+  occurred_at DateTime @db.Date
+  memo        String?
+  created_by  BigInt?
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+  updated_at  DateTime @default(now()) @db.Timestamp(6)
+  units       units    @relation(fields: [unit_id], references: [id], onUpdate: NoAction, map: "fk_txn_unit")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model units {
+  id               BigInt         @id @default(autoincrement())
+  project_id       BigInt
+  building_no      String
+  unit_no          String
+  business_type    String
+  area_m2          Decimal        @db.Decimal(10, 2)
+  status           String
+  buyer_name       String?
+  buyer_company_id BigInt?
+  attrs            Json           @default("{}")
+  created_at       DateTime       @default(now()) @db.Timestamp(6)
+  updated_at       DateTime       @default(now()) @db.Timestamp(6)
+  files            files[]
+  transactions     transactions[]
+  companies        companies?     @relation(fields: [buyer_company_id], references: [id], onUpdate: NoAction, map: "fk_units_company")
+
+  @@unique([project_id, building_no, unit_no], map: "uq_unit")
+}
+
+model ai_models {
+  id           BigInt        @id @default(autoincrement())
+  provider_id  BigInt
+  name         String
+  model_name   String
+  is_builtin   Boolean       @default(false)
+  created_at   DateTime      @default(now()) @db.Timestamp(6)
+  ai_providers ai_providers  @relation(fields: [provider_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ai_settings  ai_settings[]
+
+  @@unique([provider_id, model_name])
+}
+
+model ai_providers {
+  id          BigInt        @id @default(autoincrement())
+  slug        String        @unique
+  name        String
+  base_url    String
+  api_key     String?
+  is_builtin  Boolean       @default(false)
+  created_at  DateTime      @default(now()) @db.Timestamp(6)
+  updated_at  DateTime      @default(now()) @db.Timestamp(6)
+  ai_models   ai_models[]
+  ai_settings ai_settings[]
+}
+
+model ai_settings {
+  id                  Int           @id
+  default_provider_id BigInt?
+  default_model_id    BigInt?
+  updated_at          DateTime      @default(now()) @db.Timestamp(6)
+  ai_models           ai_models?    @relation(fields: [default_model_id], references: [id], onUpdate: NoAction)
+  ai_providers        ai_providers? @relation(fields: [default_provider_id], references: [id], onUpdate: NoAction)
+}

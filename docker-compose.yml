@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ipmds-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ipmds
+      POSTGRES_USER: ipmds_user
+      POSTGRES_PASSWORD: ipmds_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ipmds_pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: ipmds-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@ipmds.local
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - ipmds_pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  ipmds_pgdata:
+  ipmds_pgadmin:

@@ -1,0 +1,131 @@
+:root {
+  --bg: #f5f1ea;
+  --bg-ink: #0e1014;
+  --panel: #ffffff;
+  --panel-ink: #101318;
+  --muted: #6b7280;
+  --brand: #1f4b99;
+  --brand-strong: #183a7a;
+  --accent: #f1b35f;
+  --line: #e7e0d6;
+  --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 0% 0%, #fff8ee 0%, #f5f1ea 60%),
+    radial-gradient(1000px 800px at 100% 0%, #eef4ff 0%, #f5f1ea 65%);
+  color: var(--bg-ink);
+  font-family: "Space Grotesk", "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e2a4a 60%, #0b1324 100%);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-title h1 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.3px;
+}
+
+.app-title span {
+  font-size: 12px;
+  color: #cdd7f5;
+}
+
+.app-body {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  align-items: start;
+  flex: 1;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.panel-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.panel-body {
+  padding: 20px;
+}
+
+.panel-chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 520px;
+}
+
+.panel-body-chat {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px 0 32px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 1024px) {
+  .app-body {
+    grid-template-columns: 1fr;
+  }
+}
