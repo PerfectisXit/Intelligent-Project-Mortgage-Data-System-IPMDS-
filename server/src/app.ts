@@ -1,9 +1,10 @@
 import cors from "cors";
 import express from "express";
 
-import unitsRouter from "./routes/units";
-import chatRouter from "./routes/chat";
 import aiRouter from "./routes/ai";
+import chatRouter from "./routes/chat";
+import transactionsRouter from "./routes/transactions";
+import unitsRouter from "./routes/units";
 
 const app = express();
 
@@ -13,5 +14,6 @@ app.use(express.json());
 app.use("/api/units", unitsRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/ai", aiRouter);
+app.use("/api/transactions", transactionsRouter);
 
 export default app;

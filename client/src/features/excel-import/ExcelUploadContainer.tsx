@@ -4,7 +4,8 @@ import { useState } from "react";
 
 import { analyzeExcel } from "../../services/data";
 import ExcelUploadView from "./ExcelUploadView";
-import type { AddedRow, ModifiedRow, Stats, SummaryRow } from "./ExcelUploadView";
+import type { AddedRow, ModifiedRow, Stats } from "./ExcelUploadView";
+import type { SummaryRow } from "../../types/api";
 
 export default function ExcelUploadContainer() {
   const [loading, setLoading] = useState(false);
@@ -26,9 +27,10 @@ export default function ExcelUploadContainer() {
     customRequest: async ({ file, onSuccess, onError }) => {
       try {
         setLoading(true);
-        const res = await analyzeExcel(file as File, 88, mode);
+        const projectId = Number(localStorage.getItem("project_id") || "1");
+        const res = await analyzeExcel(file as File, projectId, mode);
         if (res.data.mode === "summary") {
-          setSummaryRows(res.data.summary_rows || []);
+          setSummaryRows((res.data.summary_rows || []) as SummaryRow[]);
           setStats({ added: 0, modified: 0, unchanged: 0 });
         } else {
           setAddedRows(res.data.added_rows || []);

@@ -168,15 +168,28 @@ export default function SettingsDrawer({ open, onClose }: Props) {
         <Divider />
 
         <Form.Item label="新增自定义供应商">
-          <Space orientation="vertical" style={{ width: "100%" }}>
-            <Input placeholder="供应商名称" name="custom_provider_name" />
-            <Input placeholder="Base URL" name="custom_provider_base_url" />
-            <Input.Password placeholder="API Key（可选）" name="custom_provider_key" />
+          <Space direction="vertical" style={{ width: "100%" }}>
+            <Input
+              placeholder="供应商名称"
+              value={form.getFieldValue("custom_provider_name")}
+              onChange={(e) => form.setFieldsValue({ custom_provider_name: e.target.value })}
+            />
+            <Input
+              placeholder="Base URL"
+              value={form.getFieldValue("custom_provider_base_url")}
+              onChange={(e) => form.setFieldsValue({ custom_provider_base_url: e.target.value })}
+            />
+            <Input.Password
+              placeholder="API Key（可选）"
+              value={form.getFieldValue("custom_provider_key")}
+              onChange={(e) => form.setFieldsValue({ custom_provider_key: e.target.value })}
+            />
             <Button
               onClick={async () => {
-                const name = form.getFieldValue("custom_provider_name");
-                const base_url = form.getFieldValue("custom_provider_base_url");
-                const api_key = form.getFieldValue("custom_provider_key");
+                const values = form.getFieldsValue();
+                const name = values.custom_provider_name;
+                const base_url = values.custom_provider_base_url;
+                const api_key = values.custom_provider_key;
                 if (!name || !base_url) {
                   message.error("请填写供应商名称与 Base URL");
                   return;
@@ -198,6 +211,9 @@ export default function SettingsDrawer({ open, onClose }: Props) {
                   model_id: null,
                   api_key: api_key || "",
                   base_url,
+                  custom_provider_name: "",
+                  custom_provider_base_url: "",
+                  custom_provider_key: "",
                 });
                 message.success("供应商已创建");
               }}
@@ -208,17 +224,26 @@ export default function SettingsDrawer({ open, onClose }: Props) {
         </Form.Item>
 
         <Form.Item label="新增自定义模型">
-          <Space orientation="vertical" style={{ width: "100%" }}>
-            <Input placeholder="模型显示名" name="custom_model_name" />
-            <Input placeholder="模型标识（model_name）" name="custom_model_id" />
+          <Space direction="vertical" style={{ width: "100%" }}>
+            <Input
+              placeholder="模型显示名"
+              value={form.getFieldValue("custom_model_name")}
+              onChange={(e) => form.setFieldsValue({ custom_model_name: e.target.value })}
+            />
+            <Input
+              placeholder="模型标识（model_name）"
+              value={form.getFieldValue("custom_model_id")}
+              onChange={(e) => form.setFieldsValue({ custom_model_id: e.target.value })}
+            />
             <Button
               onClick={async () => {
                 if (!selectedProviderId) {
                   message.error("请先选择供应商");
                   return;
                 }
-                const name = form.getFieldValue("custom_model_name");
-                const model_name = form.getFieldValue("custom_model_id");
+                const values = form.getFieldsValue();
+                const name = values.custom_model_name;
+                const model_name = values.custom_model_id;
                 if (!name || !model_name) {
                   message.error("请填写模型名称与标识");
                   return;
@@ -239,6 +264,10 @@ export default function SettingsDrawer({ open, onClose }: Props) {
                   })),
                 }));
                 setProviders(normalized);
+                form.setFieldsValue({
+                  custom_model_name: "",
+                  custom_model_id: "",
+                });
                 message.success("模型已创建");
               }}
             >

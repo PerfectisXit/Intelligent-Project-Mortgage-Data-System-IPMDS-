@@ -16,6 +16,7 @@ type Props = {
   loading: boolean;
   onInputChange: (value: string) => void;
   onSend: () => void;
+  onConfirm?: (entities: Record<string, unknown>) => void;
 };
 
 export default function ChatAssistantView({
@@ -24,6 +25,7 @@ export default function ChatAssistantView({
   loading,
   onInputChange,
   onSend,
+  onConfirm,
 }: Props) {
   const labelMap: Record<string, string> = {
     unit_no: "房号",
@@ -68,7 +70,11 @@ export default function ChatAssistantView({
                       );
                     })}
                     <div style={{ marginTop: 8 }}>
-                      <Button type="primary" block>
+                      <Button
+                        type="primary"
+                        block
+                        onClick={() => onConfirm?.(item.entities || {})}
+                      >
                         确认录入
                       </Button>
                     </div>

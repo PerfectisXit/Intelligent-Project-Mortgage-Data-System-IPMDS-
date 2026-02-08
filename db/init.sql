@@ -103,3 +103,40 @@ COMMENT ON COLUMN companies.alias IS '别名/简称映射';
 
 ALTER TABLE units
   ADD CONSTRAINT fk_units_company FOREIGN KEY (buyer_company_id) REFERENCES companies(id) ON DELETE SET NULL;
+
+-- AI Providers: AI供应商配置表
+CREATE TABLE IF NOT EXISTS ai_providers (
+  id BIGSERIAL PRIMARY KEY,
+  slug TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  base_url TEXT NOT NULL,
+  api_key TEXT,
+  is_builtin BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+COMMENT ON TABLE ai_providers IS 'AI供应商配置（OpenAI等）';
+
+-- AI Models: AI模型配置表
+CREATE TABLE IF NOT EXISTS ai_models (
+  id BIGSERIAL PRIMARY KEY,
+  provider_id BIGINT NOT NULL REFERENCES ai_providers(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  model_name TEXT NOT NULL,
+  is_builtin BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  UNIQUE (provider_id, model_name)
+);
+
+COMMENT ON TABLE ai_models IS 'AI模型配置';
+
+-- AI Settings: AI默认设置表
+CREATE TABLE IF NOT EXISTS ai_settings (
+  id INTEGER PRIMARY KEY,
+  default_provider_id BIGINT REFERENCES ai_providers(id) ON DELETE SET NULL,
+  default_model_id BIGINT REFERENCES ai_models(id) ON DELETE SET NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+COMMENT ON TABLE ai_settings IS 'AI默认设置';

@@ -168,25 +168,85 @@ check_gh_auth() {
   return 0
 }
 
-# Get the last commit messages for release notes
+# Get the last commit messages for release notes (Bilingual: EN & CN)
 get_release_notes() {
   local version=$1
   local last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+  local repo_url=$(gh repo view --json url -q .url 2>/dev/null || echo "")
 
-  echo "## Changes in $version"
+  echo "## 📝 Release Notes / 版本说明"
+  echo ""
+  echo "**Version / 版本:** $version"
   echo ""
 
+  # English Section
+  echo "### 🇺🇸 English"
+  echo ""
   if [ -z "$last_tag" ]; then
-    echo "### Commits"
+    echo "#### Commits"
     git log --pretty=format:"- %s (%h)" --no-merges | head -20
   else
-    echo "### Changes since $last_tag"
+    echo "#### Changes since $last_tag"
     git log --pretty=format:"- %s (%h)" --no-merges "$last_tag..HEAD" | head -20
   fi
-
   echo ""
-  echo "### Full Changelog"
-  echo "https://github.com/$(gh repo view --json nameWithOwner -q .nameWithOwner)/commits/$version"
+
+  # Chinese Section
+  echo "### 🇨🇳 中文"
+  echo ""
+  if [ -z "$last_tag" ]; then
+    echo "#### 提交记录"
+    git log --pretty=format:"- %s (%h)" --no-merges | head -20
+  else
+    echo "#### 自 $last_tag 以来的变更"
+    git log --pretty=format:"- %s (%h)" --no-merges "$last_tag..HEAD" | head -20
+  fi
+  echo ""
+
+  # Installation / 安装说明
+  echo "---"
+  echo ""
+  echo "## 🚀 Quick Start / 快速开始"
+  echo ""
+  echo '```bash'
+  echo '# Clone the repository / 克隆仓库'
+  echo "git clone $repo_url"
+  echo ''
+  echo '# Start with Docker / 使用 Docker 启动'
+  echo 'docker-compose up -d'
+  echo ''
+  echo '# Or start services manually / 或手动启动服务'
+  echo '# 1. Start infrastructure / 启动基础设施'
+  echo 'docker-compose up -d postgres pgadmin'
+  echo ''
+  echo '# 2. Start backend server / 启动后端服务'
+  echo 'cd server && npm install && npm run dev'
+  echo ''
+  echo '# 3. Start data service / 启动数据服务'
+  echo 'cd data_service && pip install -r requirements.txt && uvicorn main:app --reload'
+  echo ''
+  echo '# 4. Start frontend / 启动前端'
+  echo 'cd client && npm install && npm run dev'
+  echo '```'
+  echo ""
+
+  # Full Changelog
+  echo "---"
+  echo ""
+  echo "### 📋 Full Changelog / 完整变更日志"
+  if [ -n "$repo_url" ]; then
+    echo "[$repo_url/compare/$last_tag...v$version]($repo_url/compare/$last_tag...v$version)"
+  fi
+  echo ""
+
+  # Contributors
+  echo "### 👥 Contributors / 贡献者"
+  if [ -z "$last_tag" ]; then
+    git log --pretty=format:"@%an" --no-merges | sort | uniq | head -10 | tr '\n' ' '
+  else
+    git log --pretty=format:"@%an" --no-merges "$last_tag..HEAD" | sort | uniq | head -10 | tr '\n' ' '
+  fi
+  echo ""
 }
 
 # Create GitHub release

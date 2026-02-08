@@ -1,6 +1,7 @@
+import { message } from "antd";
 import { useMemo, useState } from "react";
 
-import { sendChat } from "../../services/ai";
+import { createTransaction, sendChat } from "../../services/ai";
 import { fetchSettings } from "../../services/aiCatalog";
 import ChatAssistantView from "./ChatAssistantView";
 import type { ChatMessage } from "./ChatAssistantView";
@@ -53,6 +54,24 @@ export default function ChatAssistantContainer() {
     }
   }
 
+  async function handleConfirm(entities: Record<string, unknown>) {
+    try {
+      const today = new Date().toISOString().split("T")[0];
+      await createTransaction({
+        unit_no: entities.unit_no as string,
+        buyer_name: entities.buyer_name as string,
+        amount: entities.amount as number,
+        currency: (entities.currency as string) || "CNY",
+        txn_type: entities.txn_type as string,
+        occurred_at: today,
+        memo: "通过AI助手录入",
+      });
+      message.success("交易已录入");
+    } catch (err) {
+      message.error(err instanceof Error ? err.message : "录入失败");
+    }
+  }
+
   return (
     <ChatAssistantView
       messages={messages}
@@ -60,6 +79,7 @@ export default function ChatAssistantContainer() {
       loading={loading}
       onInputChange={setInput}
       onSend={canSend ? sendMessage : () => undefined}
+      onConfirm={handleConfirm}
     />
   );
 }

@@ -1,6 +1,7 @@
 import { Card, Statistic, Table, Tabs, Upload } from "antd";
 import type { UploadProps } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
+import type { SummaryRow } from "../../types/api";
 import styles from "./ExcelUpload.module.css";
 
 export type AddedRow = {
@@ -21,19 +22,7 @@ export type Stats = {
   unchanged: number;
 };
 
-export type SummaryRow = {
-  project_company: string;
-  project_name: string;
-  contractor: string;
-  business_type: string;
-  gd_units: number;
-  gd_area_m2: number;
-  gd_price_per_m2: number;
-  gd_total_price_10k: number;
-  signed_amount_10k: number;
-  received_10k: number;
-  unpaid_10k: number;
-};
+export type { SummaryRow };
 
 type Props = {
   loading: boolean;

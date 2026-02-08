@@ -9,7 +9,7 @@ const aiResponseSchema = zod_1.z.object({
     buyer_name: zod_1.z.string().optional(),
     amount: zod_1.z.number().optional(),
     currency: zod_1.z.string().optional(),
-    txn_type: zod_1.z.enum(["定金", "首付", "分期"]).optional(),
+    txn_type: zod_1.z.enum(["定金", "首付", "分期款", "尾款"]).optional(),
     missing_fields: zod_1.z.array(zod_1.z.string()).default([]),
     reply: zod_1.z.string().optional(),
 });
@@ -20,7 +20,7 @@ const systemPrompt = `
 - unit_no: 房号，例如 A1-1002
 - buyer_name: 客户姓名
 - amount: 金额（数字）
-- txn_type: 款项类型，只能是 定金 / 首付 / 分期
+-   txn_type: 款项类型，只能是 定金 / 首付 / 分期款 / 尾款
 
 关键约束：
 - 如果信息缺失，必须在 missing_fields 里列出缺失字段名，并在 reply 中追问。
@@ -32,9 +32,9 @@ const systemPrompt = `
   "unit_no": "A1-1002",
   "buyer_name": "张三",
   "amount": 500000,
-  "txn_type": null,
-  "missing_fields": ["txn_type"],
-  "reply": "请问这50万是定金、首付还是分期？"
+  "txn_type": "定金",
+  "missing_fields": [],
+  "reply": "已记录张三的定金50万元。"
 }
 `.trim();
 async function parseUserIntent(text, opts) {

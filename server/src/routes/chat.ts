@@ -40,7 +40,17 @@ router.post("/", async (req, res) => {
     }
 
     const result = await parseUserIntent(message, opts);
-    return res.json(result);
+    return res.json({
+      reply: result.reply || "",
+      entities: {
+        unit_no: result.unit_no,
+        buyer_name: result.buyer_name,
+        amount: result.amount,
+        currency: result.currency,
+        txn_type: result.txn_type,
+      },
+      missing_fields: result.missing_fields || [],
+    });
   } catch (err) {
     return res.status(500).json({ error: "AI parsing failed" });
   }

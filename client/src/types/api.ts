@@ -4,6 +4,20 @@ export type ChatResponse = {
   missing_fields: string[];
 };
 
+export type SummaryRow = {
+  project_company: string;
+  project_name: string;
+  contractor: string;
+  business_type: string;
+  gd_units: number;
+  gd_area_m2: number;
+  gd_price_per_m2: number;
+  gd_total_price_10k: number;
+  signed_amount_10k: number;
+  received_10k: number;
+  unpaid_10k: number;
+};
+
 export type AnalyzeResponse = {
   mode?: "unit" | "summary";
   added_rows: Array<{
@@ -21,5 +35,5 @@ export type AnalyzeResponse = {
     modified: number;
     unchanged: number;
   };
-  summary_rows?: Array<Record<string, unknown>>;
+  summary_rows?: SummaryRow[];
 };

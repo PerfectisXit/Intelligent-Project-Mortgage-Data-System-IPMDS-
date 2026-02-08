@@ -9,6 +9,16 @@ export type AiHeaders = {
   modelId?: number | null;
 };
 
+export type TransactionData = {
+  unit_no?: string;
+  buyer_name?: string;
+  amount?: number;
+  currency?: string;
+  txn_type?: string;
+  occurred_at?: string;
+  memo?: string;
+};
+
 export async function sendChat(message: string, headers?: AiHeaders) {
   return http.post<ChatResponse>(
     "/api/chat",
@@ -26,4 +36,8 @@ export async function sendChat(message: string, headers?: AiHeaders) {
       },
     }
   );
+}
+
+export async function createTransaction(data: TransactionData) {
+  return http.post<{ success: boolean; data: { id: number } }>("/api/transactions", data);
 }

@@ -10,7 +10,7 @@ export type AiParseResult = {
   buyer_name?: string | undefined;
   amount?: number | undefined;
   currency?: string | undefined;
-  txn_type?: "定金" | "首付" | "分期" | undefined;
+  txn_type?: "定金" | "首付" | "分期款" | "尾款" | undefined;
   missing_fields: string[];
   reply?: string | undefined;
 };
