@@ -94,6 +94,10 @@ A full-stack intelligent ledger management system for project mortgage data, fea
 └── docker-compose.yml      # Docker orchestration
 ```
 
+## Documentation
+
+- 新人上手指南（中文）：`NEWCOMER_GUIDE_CN.md`
+
 ## Quick Start
 
 ### Prerequisites
